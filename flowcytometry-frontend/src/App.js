@@ -1,49 +1,37 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import './App.css';
+   import './App.css';
 
-function App() {
-  const [file, setFile] = useState(null);
-  const [message, setMessage] = useState('');
+   function App() {
+     const [selectedFile, setSelectedFile] = useState(null);
+     const [uploadStatus, setUploadStatus] = useState('');
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+     const handleFileChange = (event) => {
+       setSelectedFile(event.target.files[0]);
+     };
 
-  const handleUpload = async () => {
-    if (!file) {
-      setMessage('Please select a file to upload.');
-      return;
-    }
+     const handleFileUpload = () => {
+       if (!selectedFile) {
+         setUploadStatus('Please select a file to upload.');
+         return;
+       }
+       setUploadStatus(`Uploading ${selectedFile.name}...`);
+       // Here you can add the code to send the file to the backend for processing.
+       // For now, we'll just simulate a successful upload.
+       setTimeout(() => {
+         setUploadStatus(`File ${selectedFile.name} uploaded successfully!`);
+       }, 2000);
+     };
 
-    const formData = new FormData();
-    formData.append('file', file);
+     return (
+       <div className="App">
+         <header className="App-header">
+           <h1>Flow Cytometry Analysis Tool</h1>
+           <input type="file" onChange={handleFileChange} />
+           <button onClick={handleFileUpload}>Upload File</button>
+           <p>{uploadStatus}</p>
+         </header>
+       </div>
+     );
+   }
 
-    try {
-      setMessage('Uploading and processing...');
-      const response = await axios.post('http://localhost:8000/api/upload/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      setMessage('Upload successful! See results below.');
-      console.log(response.data);
-      // Handle the response data (e.g., display analysis results)
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setMessage('Error uploading file.');
-    }
-  };
-
-  return (
-    <div className="App">
-      <h1>Flow Cytometry Analysis Tool</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload and Analyze</button>
-      <p>{message}</p>
-      {/* Here, add components to display analysis results */}
-    </div>
-  );
-}
-
-export default App;
+   export default App;
