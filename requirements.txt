@@ -1,0 +1,5 @@
+Django
+DjangoRestFramework
+FlowCytometryTools
+scikit-learn
+plotly
